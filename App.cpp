@@ -7,29 +7,50 @@
 // Função para realizar o login do usuário
 int telalogin(){
 	// Declaração das variáveis que receberam o login e a senha do usuário.a
-	char user[20], pass[20];
+	char user[20], pass[20], linha[100], *result;
+	char *login, *senha;
+	FILE *arq;
 	
-	printf("Digite o nome do usuário: ");
+	// Recebendo os dados de acesso do usuário (login e senha)
+	printf("Digite o nome do usuario: ");
 	gets(user);
-	printf("Digite a senha do usuário: ");
+	printf("Digite a senha do usuario: ");
 	gets(pass);
 	
-	// A função strcmp() compara duas Strings, retornar 0 quando elas são identicas e -1 quando são diferentes
-	if(strcmp("admin", user) != 0){
-		// Vericar se o login inserido é "admin"
-		printf("Usuário não encontrado!\n");
-	    return 0;
-	}
-	else if(strcmp("admin", pass) != 0){
-		// Vericar se a senha inserida é "admin"
-		printf("\nUsuário não encontrado!\n");
-		return 0;
-	}
-	else{
-		printf("\nAcesso concedido!");
-	}
+	// Recebendo no ponteiro arq o local onde os registros de logins e senhas autorizados estão armazenados
+	arq = fopen("arquivos/logins.txt", "rt");
 	
-	return 1;
+	// Verificando se deu erro na abertua do arquivo (retorna NULL se der erro na leitura)
+	if (arq == NULL)
+	{
+	    printf("Problemas na LEITURA do arquivo\n");
+	}
+
+	// Correndo todas as linhas do arquivo até que chegue ao final
+	while(!feof(arq)){
+		
+		//fgets(nome do vetor onde salvaremos a String lida, a quantidade de caracteres a ser lidos, de onde será lido)
+		fgets(linha, 41, arq);
+		
+		//a função strtok() é utilizanda para separar Strings
+		login = strtok(linha,",");
+		senha = strtok(NULL,"\n");
+		
+		/*
+		printf("login lido: %s \n", login);
+		printf("senha lida: %s \n", senha);
+		*/
+		
+		// Comparando os dados de login e senha informados pelo usuário com os dados salvos no arquivo logins.txt
+		if(strcmp(login, user) == 0 && strcmp(senha, pass) == 0){
+			
+			printf("Acesso concedido!\n");
+			return 1;
+		}
+		
+	}
+	printf("Login ou senha invalido!\n");
+	return 0;
 }
 
 // Função para a tela principal
@@ -46,7 +67,6 @@ int main(void){
 	do{
 		validar = telalogin();
 	}while(validar == 0);
-	
 	
 	system("pause");
 	return 0;

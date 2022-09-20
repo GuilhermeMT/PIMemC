@@ -2,3 +2,4 @@ guilherme,1234
 rafael,4321
 julia,feia
 rafaela,minhagatinha123
+admin,admin
